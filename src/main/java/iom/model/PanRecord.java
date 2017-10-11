@@ -2,7 +2,7 @@ package iom.model;
 
 public class PanRecord {
 
-	String ackno,name,contact;
+	String ackno,name,ackdate,status;
 	int slno;
 
 	public int getSlno() {
@@ -29,11 +29,20 @@ public class PanRecord {
 		this.name = name;
 	}
 
-	public String getContact() {
-		return contact;
+	public String getAckdate() {
+		return ackdate;
 	}
 
-	public void setContact(String contact) {
-		this.contact = contact;
+	public void setAckdate(String ackdate) {
+		this.ackdate = ackdate;
 	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
 }

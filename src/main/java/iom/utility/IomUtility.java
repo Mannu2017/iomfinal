@@ -47,7 +47,23 @@ public class IomUtility {
 				PreparedStatement ps=panconn.prepareStatement("select BranchCode from Branch_Master where BranchName='"+branchname+"';");
 				ResultSet rs=ps.executeQuery();
 				if (rs.next()) {
-					PreparedStatement pps=panconn.prepareStatement("select ack_no as ackno,(first_name+' '+middle_name+' '+last_name) as name,telephone_no as contact from pan where ack_date='"+reqdate+"' and ack_no like '"+rs.getString("BranchCode")+"%';");
+					
+					PreparedStatement ppss=panconn.prepareStatement("select count(*) from TinbosIOMRecord where Ack_No like '"+rs.getString(1)+"%' and Ack_Date='"+reqdate+"'");
+					ResultSet rrss=ppss.executeQuery();
+					if (rrss.next()) {
+						System.out.println("Date: "+rrss.getInt(1));
+						if (rrss.getInt(1)==0) {
+							PreparedStatement pss=panconn.prepareStatement("insert into tinbosiomrecord (Ack_No,Application_Name,Ack_Date,Status)select ack_no as ackno,(first_name+' '+middle_name+' '+last_name) as name,ack_date,'Dispatched' as ackdate from pan where ack_date='"+reqdate+"' and ack_no like '"+rs.getString(1)+"%';");
+							pss.execute();
+						}
+						
+						
+						
+					}else {
+						
+					}
+					
+					PreparedStatement pps=panconn.prepareStatement("select Ack_No,Application_Name,Ack_Date from TinbosIOMRecord where Ack_No like '"+rs.getString(1)+"%' and Ack_Date='"+reqdate+"'");
 					ResultSet rrs=pps.executeQuery();
 					int slid=0;
 					while (rrs.next()) {
@@ -55,7 +71,7 @@ public class IomUtility {
 						panRecord=new PanRecord();
 						panRecord.setAckno(rrs.getString(1));
 						panRecord.setName(rrs.getString(2));
-						panRecord.setContact(rrs.getString(3));
+						panRecord.setAckdate(rrs.getString(3));
 						panRecord.setSlno(slid);
 						panRecords.add(panRecord);
 						

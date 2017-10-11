@@ -32,7 +32,7 @@
 			    }
 			});
 			alert(myTableArray);
-			alert(myTableArray[0][0]);
+			
 	        
 		setTimeout(function(){ window.location.href = 'http://localhost:8090/user/home'; }, 50); 
 		return true;
@@ -114,17 +114,14 @@
 					        <div class="col-sm-12">
 					        <!-- Start Table Data -->
 					        
-					        
-					        
-					        
 					          <table class="table table-striped" id="RowData">
                                <thead>
                                 <tr>
                                 <th>Sl No</th>
                                 <th>Ack No</th>
                                 <th>Name</th>
-                                <th>Contact No</th>
-                                <th>Select All</th>
+                                <th>Ack Date</th>
+                                <th>Status</th>
                                </tr>
                               </thead>
                                <tbody>
@@ -133,17 +130,19 @@
                                    <td th:text="${panrecord.slno}"></td>
                                    <td th:text="${panrecord.ackno}"></td>
                                    <td th:text="${panrecord.name}"></td>
-                                   <td th:text="${panrecord.contact}"></td>
-                                   <td><input type="checkbox" /></td>
+                                   <td th:text="${panrecord.ackdate}"></td>
+                               		<td></td>
                                 </tr>
                                </th:block>
                                </tbody>
                                </table>
-                               
                                <div class="col-sm-4"></div>
 							<div class="col-sm-4" >
                         			<button class="btn btn-primary" name="UpdateRecord" type="Submit" style="width:200px" onclick="return validateForm()" >Submit</button>
                         		</div>
+                        		
+                        		
+                        		<!-- End Table Data -->
 							<div class="col-sm-1"></div>
                             </div>
 						    </div>
