@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8"></meta>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+	<title>Tinbos iom Login</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	 <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}" /> 
+	 <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+</head>
+<body>
+	<header class="site-header">
+		<div class="top">
+            
+         </div>
+         <nav class="navbar navbar-default">
+         	<div class="container">
+         		<a th:href="@{/login}" class="navbar-brand">
+					<img th:src="@{/img/karlogo.png}" alt="Post"></img>
+				</a>
+				
+         	</div>
+         </nav>
+	</header>
+    
+    <div id="wrapper">
+		<div id="wrappertop"></div>
+
+		<div id="wrappermiddle">
+		<form th:action="@{/login}" method="POST" class="form-signin">
+			<h2>Login</h2>
+
+			<div id="username_input">
+
+				<div id="username_inputleft"></div>
+
+				<div id="username_inputmiddle">
+				
+					<input type="text" name="email" id="url" value="User Name" onclick="this.value = ''" />
+					<img id="url_user" th:src="@{/images/mailicon.png}" alt="" />
+				
+				</div>
+
+				<div id="username_inputright"></div>
+
+			</div>
+
+			<div id="password_input">
+
+				<div id="password_inputleft"></div>
+
+				<div id="password_inputmiddle">
+					<input type="password" name="password" id="url" value="Password" onclick="this.value = ''" />
+					<img id="url_password" th:src="@{/images/passicon.png}" alt="" />
+				</div>
+				
+				
+				<div id="password_inputright"></div>
+
+			</div>
+
+			<div id="submit">
+				<input type="image" th:src="@{/images/submit_hover.png}" id="submit1" value="Sign In" />
+				<input type="image" src="./images/submit.png" id="submit2" value="Sign In" />
+			</div>
+
+
+			<div id="links_left">
+
+			<a href="#">Forgot your Password?</a>
+
+			</div>
+		</form>
+		</div>
+		
+		<div id="wrapperbottom"></div>
+		
+	</div>
+    
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</body>
+</html>
