@@ -26,7 +26,7 @@ public class IomUtility {
 	{
 		try{
 		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		panconn=DriverManager.getConnection("jdbc:sqlserver://192.168.84.90;user=sa;password=Karvy@123;database=tinbos");
+		panconn=DriverManager.getConnection("jdbc:sqlserver://localhost;user=Anu;password=Karvy@123;database=tinbos");
 		}catch(Exception e)
 		{	
 			System.out.println("Error:"+e);
@@ -53,17 +53,12 @@ public class IomUtility {
 					if (rrss.next()) {
 						System.out.println("Date: "+rrss.getInt(1));
 						if (rrss.getInt(1)==0) {
-							PreparedStatement pss=panconn.prepareStatement("insert into tinbosiomrecord (Ack_No,Application_Name,Ack_Date,Status)select ack_no as ackno,(first_name+' '+middle_name+' '+last_name) as name,ack_date,'Dispatched' as ackdate from pan where ack_date='"+reqdate+"' and ack_no like '"+rs.getString(1)+"%';");
+							PreparedStatement pss=panconn.prepareStatement("insert into tinbosiomrecord (Reference_No,Ack_No,Application_Name,Ack_Date,Status)select '"+rs.getString(1)+reqdate+"',ack_no as ackno,(first_name+' '+middle_name+' '+last_name) as name,ack_date,'Dispatched' as ackdate from pan where ack_date='"+reqdate+"' and ack_no like '"+rs.getString(1)+"%';");
 							pss.execute();
-						}
-						
-						
-						
-					}else {
-						
+						}	
 					}
 					
-					PreparedStatement pps=panconn.prepareStatement("select Ack_No,Application_Name,Ack_Date from TinbosIOMRecord where Ack_No like '"+rs.getString(1)+"%' and Ack_Date='"+reqdate+"'");
+					PreparedStatement pps=panconn.prepareStatement("select Ack_No,Application_Name,Ack_Date,status from TinbosIOMRecord where Ack_No like '"+rs.getString(1)+"%' and Ack_Date='"+reqdate+"'");
 					ResultSet rrs=pps.executeQuery();
 					int slid=0;
 					while (rrs.next()) {
@@ -73,6 +68,7 @@ public class IomUtility {
 						panRecord.setName(rrs.getString(2));
 						panRecord.setAckdate(rrs.getString(3));
 						panRecord.setSlno(slid);
+						panRecord.setStatus(rrs.getString(4));
 						panRecords.add(panRecord);
 						
 					}

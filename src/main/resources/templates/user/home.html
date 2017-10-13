@@ -15,32 +15,22 @@
 	<script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
 	
-	function validateForm() {
+	$(document).on("click",".updateStatus",function(){
+		alert("1");
+		var ackno=$(this).data('id');
+		alert("2");
+		$(".modal-body #ackno").val(ackno);
+		alert("3");
+	});
+	
+	function validateForm(ackno) {
+		alert(ackno);
 		
-		var confrm="Do you want to Submit Record" ;
-		if(confirm("Do you want to Submit Record"))
-		{
-			var myTableArray = [];
-			$("table#RowData tr").each(function() { 
-			    var arrayOfThisRow = [];
-			    var tableData = $(this).find('td');
-			    if (tableData.length > 0) {
-			    	tableData.each(function() { arrayOfThisRow.push($(this).text()); });
-			        alert(arrayOfThisRow);
-			        
-			        myTableArray.push(arrayOfThisRow);
-			    }
-			});
-			alert(myTableArray);
-			
-	        
-		setTimeout(function(){ window.location.href = 'http://localhost:8090/user/home'; }, 50); 
-		return true;
-		}else{
-			return false;
-		}
-		
+		$(".modal-body #ackno").val(ackno);    
+	return true;
 }
+	
+	
 	
 /*]]>*/
 </script>
@@ -128,17 +118,35 @@
 							  <th:block th:each="panrecord : ${panrecords}">
                                 <tr>
                                    <td th:text="${panrecord.slno}"></td>
-                                   <td th:text="${panrecord.ackno}"></td>
+                                   <td id="ack" th:text="${panrecord.ackno}"></td>
                                    <td th:text="${panrecord.name}"></td>
                                    <td th:text="${panrecord.ackdate}"></td>
-                               		<td></td>
+                                   <td>
+                               		<a href="#updateStatus" data-toggle="modal" data-target="#login-modal" data-id="${panrecord.ackno}" th:text="${panrecord.status}" th:onclick="'validateForm(\''+${panrecord.ackno}+'\');'"></a>
+                               		</td>
+
                                 </tr>
                                </th:block>
                                </tbody>
                                </table>
+                               
+                               <div class="modal fade" id="login-modal"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    	  					<div class="modal-dialog">
+							<div class="modal-body loginmodal-container">
+							<h1>Application Update</h1><br>
+				  			
+							<input  type="text" id="ackno" name="ackno" placeholder="Ack No" class="form-control" onfocus="self.blur" />
+							
+							
+							<button class="btn btn-lg btn-primary btn-block" name="Submit" type="Submit">Submit</button>
+				  			
+							</div>
+							</div>
+		  					</div>
+                               
                                <div class="col-sm-4"></div>
 							<div class="col-sm-4" >
-                        			<button class="btn btn-primary" name="UpdateRecord" type="Submit" style="width:200px" onclick="return validateForm()" >Submit</button>
+                        			<button class="btn btn-primary" name="UpdateRecord" type="Submit" style="width:200px" onclick="return validateForm1()" >Submit</button>
                         		</div>
                         		
                         		

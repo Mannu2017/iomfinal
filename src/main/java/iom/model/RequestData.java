@@ -7,6 +7,26 @@ public class RequestData {
 	String rdate;
 	
 	String status;
+	
+	String ackno;
+	
+	String ackstatus;
+
+	public String getAckno() {
+		return ackno;
+	}
+
+	public void setAckno(String ackno) {
+		this.ackno = ackno;
+	}
+
+	public String getAckstatus() {
+		return ackstatus;
+	}
+
+	public void setAckstatus(String ackstatus) {
+		this.ackstatus = ackstatus;
+	}
 
 	public String getStatus() {
 		return status;
