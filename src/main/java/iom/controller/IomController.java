@@ -1,5 +1,8 @@
 package iom.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -77,7 +80,6 @@ public class IomController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user=userService.findByUsername(auth.getName());
 		RequestData requestData=new RequestData();
-		requestData.setStatus("N");
 		modelAndView.addObject("userName", "Welcome " + user.getFullname());
 		modelAndView.addObject("branchname","Branch: "+user.getBranchname());
 		modelAndView.addObject("requestData",requestData);
@@ -91,16 +93,41 @@ public class IomController {
 	public ModelAndView getData(@Valid RequestData requestData,BindingResult result){
 		Authentication auth=SecurityContextHolder.getContext().getAuthentication();
 		User user=userService.findByUsername(auth.getName());
-		List<PanRecord>	panRecords= iomUtility.sendRequeast(requestData.getType(),requestData.getRdate(),user.getBranchname());
-		if(result.hasErrors()) {
-			ModelAndView modelAndView=new ModelAndView();
-			modelAndView.addObject("userName","Welcome "+user.getFullname());
-			modelAndView.addObject("branchname","Branch: "+user.getBranchname());
-			modelAndView.addObject("requetData",requestData);
-			modelAndView.addObject("msg","");
-			modelAndView.setViewName("user/home");
-			return modelAndView;
-		}
+			
+		try {
+			if (result.hasErrors()) {
+				ModelAndView modelAndView=new ModelAndView();
+				modelAndView.addObject("userName","Welcome "+user.getFullname());
+				modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+				modelAndView.addObject("requestData",requestData);
+				modelAndView.addObject("msg","");
+				modelAndView.addObject("result", false);
+				modelAndView.setViewName("user/home");
+				return modelAndView;
+			}
+			
+			if (requestData.getAckno()==null) {
+				requestData.setAckno("0");
+			}
+			if (requestData.getAckstatus()==null) {
+				requestData.setAckstatus(" ");
+			}
+			if (requestData.getAckremarks()==null) {
+				requestData.setAckremarks(" ");
+			}
+			
+			List<PanRecord>	panRecords= iomUtility.sendRequeast(requestData.getType(),requestData.getRdate(),user.getBranchname(),requestData.getAckno(),requestData.getAckstatus(),requestData.getAckremarks());
+			
+			if (panRecords.size()==0) {
+				ModelAndView modelAndView=new ModelAndView();
+				modelAndView.addObject("userName","Welcome "+user.getFullname());
+				modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+				modelAndView.addObject("requestData",requestData);
+				modelAndView.addObject("msg","No Record found");
+				modelAndView.addObject("result", false);
+				modelAndView.setViewName("user/home");
+				return modelAndView;
+			}
 			
 			ModelAndView modelAndView=new ModelAndView();
 			modelAndView.addObject("userName", "Welcome " + user.getFullname());
@@ -110,9 +137,16 @@ public class IomController {
 			modelAndView.addObject("panrecords",panRecords);
 			modelAndView.setViewName("user/home");
 			return modelAndView;
-		
-		
-		
-		
+			
+		} catch (Exception e) {
+			ModelAndView modelAndView=new ModelAndView();
+			modelAndView.addObject("userName","Welcome "+user.getFullname());
+			modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+			modelAndView.addObject("requestData",requestData);
+			modelAndView.addObject("msg","Data Error");
+			modelAndView.addObject("result", false);
+			modelAndView.setViewName("user/home");
+			return modelAndView;
+		}
 	}
 }

@@ -17,8 +17,10 @@
 	
 	function validateForm(ackno) {
 		$(".modal-body #ackno").val(ackno);    
-	return true;
+	return true;​
 }
+	
+	fdocument.getElementById("datepicker").valueAsDate = new Date()
 /*]]>*/
 </script>
 	
@@ -32,13 +34,15 @@
          		<a th:href="@{/user/home}" class="navbar-brand">
 					<img th:src="@{/img/karlogo.png}" alt="Post"></img>
 				</a>
+			<ul class="nav navbar-nav main-navbar-nav">
+					<li></li>
+			</ul>
+			
+			<ul class="nav navbar-nav main-navbar-nav">
+				<li class="active"><a th:href="@{/admin/home}" class="btn-block" role="button">Home</a></li>
 				
-				<ul class="nav navbar-nav main-navbar-nav">
-					<li class="active"><a th:href="@{/admin/home}" class="btn-block" role="button">Home</a></li>
-					<li ><a th:href="@{/admin/submit}" class="btn-block" role="button">Courier Update</a></li>
-					<li ><a th:href="@{/admin/report}" class="btn-block" role="button">Report</a></li>
-				</ul>
 				
+			</ul>	
 				<div class="collapse navbar-collapse" id="bs-navbar-collapse">
 					<ul class="nav navbar-nav main-navbar-nav">	
 						<form th:action="@{/logout}" method="get"><span th:utext="${userName}"></span>  .<button class="btn btn-primary" name="logout" type="Submit" >Logout</button></form>						 
@@ -92,9 +96,7 @@
 							<strong>Date:</strong>
 							</div>	
                 			<div class="col-sm-3">
-                				<input class="form-control" type="date" th:field="*{rdate}" placeholder="DD-MM-YYYY" />
-                				<label th:if="${#fields.hasErrors('rdate')}" th:errors="*{rdate}"
-								           class="validation-message" style="color: red"></label>
+                				<input class="form-control" type="date"  id="myDate" th:field="*{rdate}" />
                 			</div>
                 				<button class="btn btn-primary" name="getData" type="Submit" >Search</button>
                 				<div th:if="${result}" class="form-group">

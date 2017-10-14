@@ -1,16 +1,29 @@
 package iom.model;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class RequestData {
 
 	String type;
 	
+	@NotEmpty(message="Please select Date")
 	String rdate;
-	
-	String status;
 	
 	String ackno;
 	
 	String ackstatus;
+	
+	String ackremarks;
+	
+
+	public String getAckremarks() {
+		return ackremarks;
+	}
+
+	public void setAckremarks(String ackremarks) {
+		
+		this.ackremarks = ackremarks;
+	}
 
 	public String getAckno() {
 		return ackno;
@@ -26,14 +39,6 @@ public class RequestData {
 
 	public void setAckstatus(String ackstatus) {
 		this.ackstatus = ackstatus;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
 	}
 
 	public String getRdate() {
