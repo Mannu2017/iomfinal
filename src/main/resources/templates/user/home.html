@@ -34,9 +34,9 @@
 				</a>
 				
 				<ul class="nav navbar-nav main-navbar-nav">
-					<li class="active"><a th:href="@{/admin/home}" class="btn-block" role="button">Home</a></li>
-					<li ><a th:href="@{/admin/submit}" class="btn-block" role="button">Courier Update</a></li>
-					<li ><a th:href="@{/admin/report}" class="btn-block" role="button">Report</a></li>
+					<li class="active"><a th:href="@{/user/home}" class="btn-block" role="button">Home</a></li>
+					<li ><a th:href="@{/user/submit}" class="btn-block" role="button">Courier Update</a></li>
+					<li ><a th:href="@{/user/report}" class="btn-block" role="button">Report</a></li>
 				</ul>
 				
 				<div class="collapse navbar-collapse" id="bs-navbar-collapse">
@@ -133,14 +133,17 @@
     	  					<div class="modal-dialog">
 							<div class="modal-body loginmodal-container">
 							<h1>Status Update</h1><br>
+							<strong>Acknowledgement No</strong>
 				  			<input  type="text" id="ackno" name="ackno" th:field="*{ackno}" placeholder="Ack No" class="form-control" readonly onfocus="self.blur" />
 							
+							<strong>Acknowledgement Status</strong>
 							<select class="form-control" th:field="*{ackstatus}"  id="type" >
                                 <option th:value="Dispatched" th:text="Dispatched"></option>
                                 <option th:value="Pending" th:text="Pending"></option>
                                 <option th:value="Reject" th:text="Reject"></option>
                 			</select>
-                			<br></br>	
+                			
+                			<strong>Remarks</strong>
                 			<input  type="text" id="ackremarks" name="ackremarks" th:field="*{ackremarks}" placeholder="Remarks" class="form-control" />
 							
 							<button class="btn btn-lg btn-primary btn-block" name="Submit" type="Submit">Submit</button>
@@ -167,7 +170,7 @@
 							<div class="col-sm-5"></div>
 							<div class="col-sm-1"></div>
 							<div class="col-sm-4" >
-                        			<span th:utext="${msg}"></span>
+                        			<span th:utext="${msg}" style="color: red"></span>
                         			
                         		</div>
 							</div>

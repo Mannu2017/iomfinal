@@ -40,12 +40,9 @@ public class IomController {
 		List<GrantedAuthority> list=(List<GrantedAuthority>) auth.getAuthorities();
         if (list.get(0).getAuthority().equalsIgnoreCase("Administrator")) {
             return "redirect:/admin/home";
-        }
-        else if (list.get(0).getAuthority().equalsIgnoreCase("User")) {
+        } else if (list.get(0).getAuthority().equalsIgnoreCase("User")) {
             return "redirect:/user/home";
-        }
-        
-        
+        } 
         return "redirect:/login";
     }
 	
@@ -149,4 +146,19 @@ public class IomController {
 			return modelAndView;
 		}
 	}
+	
+	@RequestMapping(value="/user/submit", method = RequestMethod.GET)
+	public ModelAndView userCourier(){
+		ModelAndView modelAndView = new ModelAndView();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user=userService.findByUsername(auth.getName());
+		modelAndView.addObject("userName", "Welcome " + user.getFullname());
+		modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+		modelAndView.addObject("msg","");
+		modelAndView.setViewName("user/submit");
+		return modelAndView;
+	}
+	
+	
+	
 }
