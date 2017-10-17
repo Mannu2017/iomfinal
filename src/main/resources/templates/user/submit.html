@@ -67,8 +67,7 @@
                     <!-- Get Report Panel Start -->
                     	<form autocomplete="off" action="#" th:action="@{/user/submit}" th:object="${reportRequeast}" method="post" class="form-horizontal" role="form" id="GetReport">
                     		<br></br>
-                    	<div class="form-group">
-                    		<div class="row">
+                    		<div class="form-group">
 							<div class="col-sm-4"></div>
 							<div class="col-sm-8">
                     		<div class="col-sm-1">
@@ -137,22 +136,53 @@
 					             	 </div>
 					             </div>
 					             </center>
-					         </div>                 
+					         </div>   
+							        
 					        </div>
-                    		
-                    		
-                    		<br></br>
-                    		<br></br>
-                    		<br></br>
+					        </div>
+					       <div th:if="${reportRequeast.status == 'V'}">
+					       	<div  class="form-group">
+					            <div class="row">
+					            <div class="col-sm-1"></div>
+					            <div class="col-sm-10">
+					            	<div class="col-sm-2">
+								<strong>Courier Details:</strong>
+							</div>
+							<div class="col-sm-4">
+							<select class="form-control" id="type">
+                                <option th:value="Indian_Postal_Services" th:text="Indian_Postal_Services"></option>
+                                <option th:value="First_Flight_Courier_Limited" th:text="First_Flight_Courier_Limited"></option>
+                                <option th:value="Blue_Dart_Express_Limited" th:text="Blue_Dart_Express_Limited"></option>
+                                <option th:value="DTDC_Courier" th:text="DTDC_Courier"></option>
+                                <option th:value="The_Professional_Courier_Ltd" th:text="The_Professional_Courier_Ltd"></option>
+                                <option th:value="FedEx_India" th:text="FedEx_India"></option>
+                                <option th:value="Gati_Limited" th:text="Gati_Limited"></option>
+                                <option th:value="DHL_Express_India_Pvt_Ltd" th:text="DHL_Express_India_Pvt_Ltd"></option>
+                                <option th:value="TNT_Express" th:text="TNT_Express"></option>
+                                <option th:value="Other" th:text="Other"></option>
+                			</select>	
+                			</div>
+
+                			<div class="col-sm-3">
+                				<input class="form-control" type="text"  placeholder="Tracking Id" />
+                			</div>
+                			<div class="col-sm-2">
+                				<input class="form-control" type="text"  placeholder="Remarks" />
+                			</div>
+                			
+                			<button class="btn btn-primary" name="getData" type="Submit" >Submit</button>
+                			</div>
+					            </div>
+					            </div>
+					            </div>
+					       
+					       
                     		<div class="col-sm-2"></div>
-							<div class="col-sm-2"></div>
-							<div class="col-sm-4" >
+                    		<div class="col-sm-2"></div>
+							<div class="col-sm-4">
                         			<span th:utext="${msg}" style="color: red"></span>
-                        			
-                        		</div>
-                    		</div>
-                    		</div>
-                    		
+                        	</div>
+                        	</div>
                     	 </form>
                		<!-- Get Report Panel End --> 
 				</div>

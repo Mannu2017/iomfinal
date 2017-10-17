@@ -214,4 +214,18 @@ public class IomController {
 			modelAndView.setViewName("user/submit");
 			return modelAndView;
 	}
+	
+	@RequestMapping(value="/user/report", method = RequestMethod.GET)
+	public ModelAndView userReport(){
+		ModelAndView modelAndView = new ModelAndView();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user=userService.findByUsername(auth.getName());
+		modelAndView.addObject("userName", "Welcome " + user.getFullname());
+		modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+		modelAndView.addObject("msg","");
+		modelAndView.setViewName("user/report");
+		return modelAndView;
+	}
+	
+	
 }
