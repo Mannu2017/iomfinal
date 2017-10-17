@@ -11,9 +11,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.solr.client.solrj.request.CollectionAdminRequest.Create;
 import org.springframework.stereotype.Component;
 
 import iom.model.PanRecord;
+import iom.model.ReportRequeast;
+import iom.model.ReqDate;
 import iom.model.RequestData;
 
 @Component
@@ -26,7 +29,7 @@ public class IomUtility {
 	{
 		try{
 		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		panconn=DriverManager.getConnection("jdbc:sqlserver://192.168.84.90;user=sa;password=Karvy@123;database=tinbos");
+		panconn=DriverManager.getConnection("jdbc:sqlserver://localhost;user=Anu;password=Karvy@123;database=tinbos");
 		}catch(Exception e)
 		{	
 			System.out.println("Error:"+e);
@@ -1296,5 +1299,49 @@ public class IomUtility {
 		}
 		
 		return panRecords;
+	}
+
+	public ReqDate getReport(String branchname, String reqdate) {
+		ReqDate reqDat=new ReqDate();
+		try {
+			String brcode=null;
+			Date dat = null;
+			try {
+				dat = new SimpleDateFormat("yyyy-MM-dd").parse(reqdate);
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
+			DateFormat df=new SimpleDateFormat("yyyyMMdd");
+			String redat=df.format(dat);
+			
+			PreparedStatement pStatement=panconn.prepareStatement("select BranchCode from Branch_Master where BranchName='"+branchname+"';");
+			ResultSet rsSet=pStatement.executeQuery();
+			if (rsSet.next()) {
+				brcode=rsSet.getString(1);
+			}
+			pStatement.close();
+			rsSet.close();
+			PreparedStatement ps4=panconn.prepareStatement("GetBranchCount '"+redat+"' , '"+brcode+"';");
+			ps4.execute();
+			ps4.close();
+			PreparedStatement ps5=panconn.prepareStatement("select Ref_Id,Pan,Pran,Etds,Tan,Paper,Air,G24,TotalRecord from BranchIom where BranchCode='"+brcode+"' and ReqDate='"+redat+"'");
+			ResultSet rs5=ps5.executeQuery();
+			if (rs5.next()) {
+				reqDat.setRefno(rs5.getString(1));
+				reqDat.setPan(rs5.getInt(2));
+				reqDat.setPran(rs5.getInt(3));
+				reqDat.setEtds(rs5.getInt(4));
+				reqDat.setTan(rs5.getInt(5));
+				reqDat.setPaper(rs5.getInt(6));
+				reqDat.setAir(rs5.getInt(7));
+				reqDat.setG24(rs5.getInt(8));
+				reqDat.setTotal(rs5.getInt(9));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return reqDat;
 	}
 }

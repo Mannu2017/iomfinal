@@ -65,10 +65,95 @@
                        </div>                 
                     </div>
                     <!-- Get Report Panel Start -->
-                    	
-                    	
-                    	
-                    	   
+                    	<form autocomplete="off" action="#" th:action="@{/user/submit}" th:object="${reportRequeast}" method="post" class="form-horizontal" role="form" id="GetReport">
+                    		<br></br>
+                    	<div class="form-group">
+                    		<div class="row">
+							<div class="col-sm-4"></div>
+							<div class="col-sm-8">
+                    		<div class="col-sm-1">
+                 			<strong>Date:</strong>
+                 			</div>
+                 			<div class="col-sm-3">
+                				<input class="form-control" type="date" th:field="*{reqdate}" placeholder="DD-MM-YYYY" />
+                				<label th:if="${#fields.hasErrors('reqdate')}" th:errors="*{reqdate}"
+								           class="validation-message" style="color: red"></label>
+                			</div>
+                				<button class="btn btn-primary" name="getData" type="Submit" >Search</button>	
+                    		</div>
+                    		
+                    		<div th:if="${reportRequeast.status == 'V'}" class="form-group">
+                    		<div class="col-sm-3"></div>
+							<div class="col-sm-6">
+							<br></br>
+					             	 <div class="form-group">
+					             	 <div class="row">
+					             	 <center>           
+										<div class="col-sm-1"></div>
+					             	 	<div class="row">
+										<strong class="form-control">
+					             	 		<a>Pan: </a>
+					             	 		<!-- <var th:utext="${centerName}"></var> -->
+											<var>_</var>
+											<a>Pran:</a>
+											<!-- <var th:utext="${centerName}"></var> -->
+											<var>_</var>
+											<a>Etds:</a>
+											<!-- <var th:utext="${centerName}"></var> -->
+											<var>_</var>
+											<a>tan:</a>
+											<!-- <var th:utext="${centerName}"></var> -->
+											<var>_</var>
+											<a>PaperReturn:</a>
+											<!-- <var th:utext="${centerName}"></var> -->
+											<var>_</var>
+											<a>Air:</a>
+											<!-- <var th:utext="${centerName}"></var> -->
+											<var>_</var>
+											<a>24G:</a>
+											<!-- <var th:utext="${centerName}"></var> -->
+											<var>_</var>		
+					             	 	</strong>
+					             	 </div>
+					             </div>
+					             </center>
+					         </div>                 
+					        </div>
+                    		
+                    		<div class="col-sm-4"></div>
+							<div class="col-sm-4">
+							     	 <div class="form-group">
+					             	 <div class="row">
+					             	 <center>           
+										<div class="col-sm-1"></div>
+					             	 	<div class="row">
+										<strong class="form-control">
+					             	 		<a>Total: </a>
+					             	 		<!-- <var th:utext="${centerName}"></var> -->
+											<var>_</var>
+											<a>Reference No:</a>
+											<!-- <var th:utext="${centerName}"></var> -->		
+					             	 	</strong>
+					             	 </div>
+					             </div>
+					             </center>
+					         </div>                 
+					        </div>
+                    		
+                    		
+                    		<br></br>
+                    		<br></br>
+                    		<br></br>
+                    		<div class="col-sm-2"></div>
+							<div class="col-sm-2"></div>
+							<div class="col-sm-4" >
+                        			<span th:utext="${msg}" style="color: red"></span>
+                        			
+                        		</div>
+                    		</div>
+                    		</div>
+                    		
+                    	 </form>
                		<!-- Get Report Panel End --> 
 				</div>
 			</div>

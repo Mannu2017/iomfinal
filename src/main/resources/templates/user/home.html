@@ -15,10 +15,21 @@
 	<script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
 	
+	function validatePage() {
+		var confrm="Do you want Submit" ;
+		if(confirm("Do you want Submit"))
+		{
+			setTimeout(function(){ window.location.href = 'http://192.168.56.24:8090/user/home'; }, 50);	
+		}else{
+			return false;
+		}
+	}
+		
 	function validateForm(ackno) {
 		$(".modal-body #ackno").val(ackno);    
 	return true;
-}
+	}
+	
 /*]]>*/
 </script>
 	
@@ -154,7 +165,7 @@
                                
                                <div class="col-sm-4"></div>
 							<div class="col-sm-4" >
-                        			<button class="btn btn-primary" name="UpdateRecord" type="Submit" style="width:200px" onclick="return validateForm1()" >Submit</button>
+                        			<button class="btn btn-primary" name="UpdateRecord" type="Submit" style="width:200px" onclick="return validatePage()" >Submit</button>
                         		</div>
                         		
                         		

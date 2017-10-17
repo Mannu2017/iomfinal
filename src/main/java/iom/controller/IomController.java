@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import iom.model.PanRecord;
+import iom.model.ReportRequeast;
+import iom.model.ReqDate;
 import iom.model.RequestData;
 import iom.model.User;
 import iom.service.UserService;
@@ -42,8 +44,9 @@ public class IomController {
             return "redirect:/admin/home";
         } else if (list.get(0).getAuthority().equalsIgnoreCase("User")) {
             return "redirect:/user/home";
-        } 
-        return "redirect:/login";
+        } else {
+        	return "redirect:/login";
+		}
     }
 	
 	@RequestMapping(value="/error", method={RequestMethod.GET})
@@ -151,14 +154,64 @@ public class IomController {
 	public ModelAndView userCourier(){
 		ModelAndView modelAndView = new ModelAndView();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		ReportRequeast reportRequeast=new ReportRequeast();
+		reportRequeast.setStatus("N");
 		User user=userService.findByUsername(auth.getName());
 		modelAndView.addObject("userName", "Welcome " + user.getFullname());
 		modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+		modelAndView.addObject("reportRequeast",reportRequeast);
 		modelAndView.addObject("msg","");
 		modelAndView.setViewName("user/submit");
 		return modelAndView;
 	}
 	
-	
-	
+	@RequestMapping( method = RequestMethod.POST , value="/user/submit")
+	public ModelAndView getCReport(@Valid ReportRequeast reportRequeast,BindingResult result){
+		Authentication auth=SecurityContextHolder.getContext().getAuthentication();
+		User user=userService.findByUsername(auth.getName());
+		
+		if (result.hasErrors()) {
+			ModelAndView modelAndView=new ModelAndView();
+			modelAndView.addObject("userName","Welcome "+user.getFullname());
+			modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+			modelAndView.addObject("reportRequeast",reportRequeast);
+			modelAndView.addObject("msg","");
+			modelAndView.setViewName("user/submit");
+			return modelAndView;
+		}
+		
+			ReqDate reqDate=iomUtility.getReport(user.getBranchname(),reportRequeast.getReqdate());
+			
+			if (reqDate.getTotal()==0) {
+				ModelAndView modelAndView=new ModelAndView();
+				modelAndView.addObject("userName","Welcome "+user.getFullname());
+				modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+				modelAndView.addObject("reportRequeast",reportRequeast);
+				modelAndView.addObject("msg","Please Update Your Application Status  Click Home Option for Update");
+				modelAndView.setViewName("user/submit");
+				return modelAndView;
+			} 
+			
+			if (reqDate.getTotal()>0) {
+				ModelAndView modelAndView=new ModelAndView();
+				reportRequeast.setStatus("V");
+				modelAndView.addObject("userName","Welcome "+user.getFullname());
+				modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+				modelAndView.addObject("reportRequeast",reportRequeast);
+				modelAndView.addObject("reqDate",reqDate);
+				modelAndView.addObject("msg","");
+				modelAndView.setViewName("user/submit");
+				return modelAndView;
+				
+			}
+			
+			
+			ModelAndView modelAndView=new ModelAndView();
+			modelAndView.addObject("userName","Welcome "+user.getFullname());
+			modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+			modelAndView.addObject("reportRequeast",reportRequeast);
+			modelAndView.addObject("msg","");
+			modelAndView.setViewName("user/submit");
+			return modelAndView;
+	}
 }
