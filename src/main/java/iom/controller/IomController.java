@@ -317,6 +317,8 @@ public class IomController {
 		}
 		List<GenerateIOM> generateIOMs=iomUtility.iomGenearet(iomReport.getRequeastno());	
 					
+		System.out.println("LL: "+generateIOMs.toString());
+		
 		return new ModelAndView("IOMPdf","generateIOMs", generateIOMs);
 	}
 	
