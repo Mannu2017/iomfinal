@@ -11,6 +11,26 @@ public class ReportRequeast {
 	
 	private String coname;
 	
+	private String trackid;
+	
+	private String remarks;
+	
+	public String getTrackid() {
+		return trackid;
+	}
+
+	public void setTrackid(String trackid) {
+		this.trackid = trackid;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
 	public String getConame() {
 		return coname;
 	}
@@ -33,7 +53,5 @@ public class ReportRequeast {
 
 	public void setStatus(String status) {
 		this.status = status;
-	}
-	
-	
+	}	
 }

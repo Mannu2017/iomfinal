@@ -14,6 +14,10 @@ import java.util.List;
 import org.apache.solr.client.solrj.request.CollectionAdminRequest.Create;
 import org.springframework.stereotype.Component;
 
+import iom.model.CourierStatus;
+import iom.model.GenerateIOM;
+import iom.model.GetRefdetail;
+import iom.model.IomReport;
 import iom.model.PanRecord;
 import iom.model.ReportRequeast;
 import iom.model.ReqDate;
@@ -29,7 +33,7 @@ public class IomUtility {
 	{
 		try{
 		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		panconn=DriverManager.getConnection("jdbc:sqlserver://localhost;user=Anu;password=Karvy@123;database=tinbos");
+		panconn=DriverManager.getConnection("jdbc:sqlserver://192.168.84.90;user=sa;password=Karvy@123;database=tinbos");
 		}catch(Exception e)
 		{	
 			System.out.println("Error:"+e);
@@ -1288,32 +1292,28 @@ public class IomUtility {
 						ps2.close();
 						ps3.close();
 						rs3.close();
-						
 					}
 				}
 				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
 		}
-		
 		return panRecords;
 	}
 
-	public ReqDate getReport(String branchname, String reqdate) {
+	public ReqDate getReport(String branchname, String reqdate, String coname, String trackid, String remarks) {
 		ReqDate reqDat=new ReqDate();
+		String brcode=null;
+		Date dat = null;
 		try {
-			String brcode=null;
-			Date dat = null;
-			try {
-				dat = new SimpleDateFormat("yyyy-MM-dd").parse(reqdate);
-			} catch (ParseException e1) {
-				e1.printStackTrace();
-			}
-			DateFormat df=new SimpleDateFormat("yyyyMMdd");
-			String redat=df.format(dat);
-			
+			dat = new SimpleDateFormat("yyyy-MM-dd").parse(reqdate);
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		}
+		DateFormat df=new SimpleDateFormat("yyyyMMdd");
+		String redat=df.format(dat);
+		try {
 			PreparedStatement pStatement=panconn.prepareStatement("select BranchCode from Branch_Master where BranchName='"+branchname+"';");
 			ResultSet rsSet=pStatement.executeQuery();
 			if (rsSet.next()) {
@@ -1337,11 +1337,124 @@ public class IomUtility {
 				reqDat.setG24(rs5.getInt(8));
 				reqDat.setTotal(rs5.getInt(9));
 			}
+			rs5.close();
+			ps5.close();	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (coname!=null) {
+			try {
+				PreparedStatement ps=panconn.prepareStatement("update BranchIom set CourierName='"+coname+"',TrackingId='"+trackid+"',CourierStatus='Courier Dispatched',Remarks='"+remarks+"',updateDate=GETDATE() where BranchCode='"+brcode+"' and ReqDate='"+redat+"'");
+				ps.execute();
+				ps.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return reqDat;
+	}
+
+	public GetRefdetail getref(String reqdate, String branchname) {
+		String bcode=null;
+		GetRefdetail getRefdetail=new GetRefdetail();
+		Date dat = null;
+		try {
+			dat = new SimpleDateFormat("yyyy-MM-dd").parse(reqdate);
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		}
+		DateFormat df=new SimpleDateFormat("yyyyMMdd");
+		String redat=df.format(dat);
+		
+		try {
+			PreparedStatement ps=panconn.prepareStatement("select BranchCode from Branch_Master where BranchName='"+branchname+"';");
+			ResultSet rs=ps.executeQuery();
+			if (rs.next()) {
+				bcode=rs.getString(1);
+			}
+			ps.close();
+			rs.close();
+			
+			PreparedStatement ps1=panconn.prepareStatement("select TotalRecord,Ref_Id,updateDate,CourierName from BranchIom where CourierName is not null and BranchCode='"+bcode+"' and ReqDate='"+redat+"';");
+			ResultSet rs1=ps1.executeQuery();
+			if (rs1.next()) {
+				getRefdetail.setTotal(rs1.getInt(1));
+				getRefdetail.setRefno(rs1.getString(2));
+				getRefdetail.setRequpdate(rs1.getString(3));
+				getRefdetail.setConame(rs1.getString(4));
+			} else {
+				getRefdetail.setRefno("0");
+			}
+			ps1.close();
+			rs1.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return getRefdetail;
+	}
+
+	public CourierStatus courierStatus(String refid, String branchname) {
+		CourierStatus courierStatus=new CourierStatus();
+		String bcode=null;
+		try {
+			PreparedStatement pStatement=panconn.prepareStatement("select BranchCode from Branch_Master where BranchName='"+branchname+"';");
+			ResultSet rsSet=pStatement.executeQuery();
+			if (rsSet.next()) {
+				bcode=rsSet.getString(1);
+			}
+			pStatement.close();
+			rsSet.close();
+			
+			PreparedStatement ps=panconn.prepareStatement("select TotalRecord,Ref_Id,updateDate,CourierName,TrackingId,CourierStatus from BranchIom where CourierName is not null and Ref_Id='"+refid+"'");
+			ResultSet rs=ps.executeQuery();
+			if(rs.next()) {
+				courierStatus.setTotalcou(rs.getInt(1));
+				courierStatus.setRefno(rs.getString(2));
+				courierStatus.setUpdate(rs.getString(3));
+				courierStatus.setConame(rs.getString(4));
+				courierStatus.setTrackid(rs.getString(5));
+				courierStatus.setCostatus(rs.getString(6));
+			}else {
+				courierStatus.setRefno("0");
+			}
+			ps.close();
+			rs.close();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+			
+		return courierStatus;
+	}
+
+	public List<GenerateIOM> iomGenearet(String requeastno) {
+		List<GenerateIOM> generateIOMs= new ArrayList<GenerateIOM>();
+		GenerateIOM generateIOM=null;
+		try {
+			PreparedStatement ps=panconn.prepareStatement("select Ack_No,Application_Name,Type,Status,Remarks from TinbosIOMRecord where Reference_No='"+requeastno+"' order by Type");
+			ResultSet rs=ps.executeQuery();
+			while (rs.next()) {
+				generateIOM=new GenerateIOM();
+				generateIOM.setAckno(rs.getString(1));
+				if(rs.getString(2)==null) {
+					generateIOM.setName("No Name");
+				}else {
+					generateIOM.setName(rs.getString(2));
+				}
+				generateIOM.setType(rs.getString(3));
+				generateIOM.setStatus(rs.getString(4));
+				if(rs.getString(5)==null) {
+					generateIOM.setRemarks(" ");
+				} else {
+					generateIOM.setRemarks(rs.getString(5));
+				}
+				generateIOMs.add(generateIOM);
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return reqDat;
+		return generateIOMs;
 	}
+
 }

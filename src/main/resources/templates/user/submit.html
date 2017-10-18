@@ -15,9 +15,31 @@
 	<script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
 	
-	function validateForm(ackno) {
-		$(".modal-body #ackno").val(ackno);    
-	return true;
+	function validatePage() {
+	
+	var x=document.forms["GetReport"]["trackid"].value;
+	var y=document.forms["GetReport"]["remarks"].value;
+	
+	if (x == null || x == "") {
+        alert("Please Enter Tracking Id");
+        return false;
+    }
+	
+	if (y == null || y == "") {
+        alert("Please Enter Remarks");
+        return false;
+    }
+	
+	if(x !=null || x !="" && y == null || y == ""){
+		var confrm="Do you want Submit" ;
+		if(confirm("Do you want Submit"))
+		{
+			setTimeout(function(){ window.location.href = 'http://192.168.56.24:8090/user/submit'; }, 50);	
+		}else{
+			return false;
+		}
+	}
+	
 }
 /*]]>*/
 </script>
@@ -65,7 +87,7 @@
                        </div>                 
                     </div>
                     <!-- Get Report Panel Start -->
-                    	<form autocomplete="off" action="#" th:action="@{/user/submit}" th:object="${reportRequeast}" method="post" class="form-horizontal" role="form" id="GetReport">
+                    	<form autocomplete="off" action="#" th:action="@{/user/submit}" th:object="${reportRequeast}" method="post" class="form-horizontal" role="form" name="GetReport" id="GetReport">
                     		<br></br>
                     		<div class="form-group">
 							<div class="col-sm-4"></div>
@@ -91,27 +113,26 @@
 										<div class="col-sm-1"></div>
 					             	 	<div class="row">
 										<strong class="form-control">
-					             	 		<a>Pan: </a>
-					             	 		<!-- <var th:utext="${centerName}"></var> -->
-											<var>_</var>
-											<a>Pran:</a>
-											<!-- <var th:utext="${centerName}"></var> -->
-											<var>_</var>
-											<a>Etds:</a>
-											<!-- <var th:utext="${centerName}"></var> -->
-											<var>_</var>
-											<a>tan:</a>
-											<!-- <var th:utext="${centerName}"></var> -->
-											<var>_</var>
-											<a>PaperReturn:</a>
-											<!-- <var th:utext="${centerName}"></var> -->
-											<var>_</var>
-											<a>Air:</a>
-											<!-- <var th:utext="${centerName}"></var> -->
-											<var>_</var>
-											<a>24G:</a>
-											<!-- <var th:utext="${centerName}"></var> -->
-											<var>_</var>		
+					             	 		<a >Pan: </a>
+					             	 		 <var style="color: RED" th:utext="${panCou}"></var>
+											<var style="color: white">_</var>
+											<a >Pran:</a>
+											<var style="color: RED" th:utext="${pranCou}"></var>
+											<var style="color: white">_</var>
+											<a >Etds:</a>
+											<var style="color: RED" th:utext="${etdsCou}"></var>
+											<var style="color: white">_</var>
+											<a >Tan:</a>
+											<var style="color: RED" th:utext="${tanCou}"></var>
+											<var style="color: white">_</var>
+											<a >Paper Return:</a>
+											<var style="color: RED" th:utext="${paperCou}"></var>
+											<var style="color: white">_</var>
+											<a >Air:</a>
+											<var style="color: RED" th:utext="${airCou}"></var>
+											<var style="color: white">_</var>
+											<a >24G:</a>
+											<var style="color: RED" th:utext="${g24Cou}"></var>		
 					             	 	</strong>
 					             	 </div>
 					             </div>
@@ -128,10 +149,10 @@
 					             	 	<div class="row">
 										<strong class="form-control">
 					             	 		<a>Total: </a>
-					             	 		<!-- <var th:utext="${centerName}"></var> -->
-											<var>_</var>
+					             	 		<var style="color: RED" th:utext="${totalCou}"></var>
+											<var  style="color: white">_</var>
 											<a>Reference No:</a>
-											<!-- <var th:utext="${centerName}"></var> -->		
+											<var style="color: RED" th:utext="${refid}"></var>		
 					             	 	</strong>
 					             	 </div>
 					             </div>
@@ -149,7 +170,7 @@
 								<strong>Courier Details:</strong>
 							</div>
 							<div class="col-sm-4">
-							<select class="form-control" id="type">
+							<select class="form-control" th:field="*{coname}" id="type">
                                 <option th:value="Indian_Postal_Services" th:text="Indian_Postal_Services"></option>
                                 <option th:value="First_Flight_Courier_Limited" th:text="First_Flight_Courier_Limited"></option>
                                 <option th:value="Blue_Dart_Express_Limited" th:text="Blue_Dart_Express_Limited"></option>
@@ -164,13 +185,13 @@
                 			</div>
 
                 			<div class="col-sm-3">
-                				<input class="form-control" type="text"  placeholder="Tracking Id" />
+                				<input class="form-control" name="trackid" type="text" th:field="*{trackid}" placeholder="Tracking Id" />
                 			</div>
                 			<div class="col-sm-2">
-                				<input class="form-control" type="text"  placeholder="Remarks" />
+                				<input class="form-control" name="remarks" type="text" th:field="*{remarks}" placeholder="Remarks" />
                 			</div>
                 			
-                			<button class="btn btn-primary" name="getData" type="Submit" >Submit</button>
+                			<button class="btn btn-primary" name="getData" type="Submit" onclick="return validatePage()">Submit</button>
                 			</div>
 					            </div>
 					            </div>

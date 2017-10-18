@@ -4,6 +4,7 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,6 +12,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.servlet.view.ResourceBundleViewResolver;
+import org.thymeleaf.spring4.SpringTemplateEngine;
 
 @Configuration
 @EnableWebSecurity
@@ -58,6 +61,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.logoutSuccessUrl("/").and().exceptionHandling()
 				.accessDeniedPage("/access-denied");
 	}
+	
+	@Bean  
+    public ResourceBundleViewResolver resourceBundleViewResolver() {  
+	    ResourceBundleViewResolver resolver = new ResourceBundleViewResolver();
+	    resolver.setBasename("views");
+	    resolver.setOrder(1);
+        return resolver;  
+    }
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {

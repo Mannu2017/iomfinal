@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import iom.model.CourierStatus;
+import iom.model.GenerateIOM;
+import iom.model.GetRefdetail;
+import iom.model.IomReport;
 import iom.model.PanRecord;
 import iom.model.ReportRequeast;
 import iom.model.ReqDate;
@@ -180,7 +184,7 @@ public class IomController {
 			return modelAndView;
 		}
 		
-			ReqDate reqDate=iomUtility.getReport(user.getBranchname(),reportRequeast.getReqdate());
+			ReqDate reqDate=iomUtility.getReport(user.getBranchname(),reportRequeast.getReqdate(),reportRequeast.getConame(),reportRequeast.getTrackid(),reportRequeast.getRemarks());
 			
 			if (reqDate.getTotal()==0) {
 				ModelAndView modelAndView=new ModelAndView();
@@ -198,7 +202,15 @@ public class IomController {
 				modelAndView.addObject("userName","Welcome "+user.getFullname());
 				modelAndView.addObject("branchname","Branch: "+user.getBranchname());
 				modelAndView.addObject("reportRequeast",reportRequeast);
-				modelAndView.addObject("reqDate",reqDate);
+				modelAndView.addObject("panCou",reqDate.getPan());
+				modelAndView.addObject("pranCou",reqDate.getPran());
+				modelAndView.addObject("etdsCou",reqDate.getEtds());
+				modelAndView.addObject("tanCou",reqDate.getTan());
+				modelAndView.addObject("paperCou",reqDate.getPaper());
+				modelAndView.addObject("airCou",reqDate.getAir());
+				modelAndView.addObject("g24Cou",reqDate.getG24());
+				modelAndView.addObject("totalCou",reqDate.getTotal());
+				modelAndView.addObject("refid",reqDate.getRefno());
 				modelAndView.addObject("msg","");
 				modelAndView.setViewName("user/submit");
 				return modelAndView;
@@ -219,13 +231,93 @@ public class IomController {
 	public ModelAndView userReport(){
 		ModelAndView modelAndView = new ModelAndView();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		IomReport iomReport=new IomReport();
+		iomReport.setStatus("N");
 		User user=userService.findByUsername(auth.getName());
 		modelAndView.addObject("userName", "Welcome " + user.getFullname());
 		modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+		modelAndView.addObject("iomReport",iomReport);
 		modelAndView.addObject("msg","");
 		modelAndView.setViewName("user/report");
 		return modelAndView;
 	}
 	
+	@RequestMapping( method = RequestMethod.POST , value="/user/report")
+	public ModelAndView getIomReport(@Valid IomReport iomReport,BindingResult result){
+		Authentication auth=SecurityContextHolder.getContext().getAuthentication();
+		User user=userService.findByUsername(auth.getName());
+		
+		if (result.hasErrors()) {
+			ModelAndView modelAndView=new ModelAndView();
+			modelAndView.addObject("userName","Welcome "+user.getFullname());
+			modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+			modelAndView.addObject("iomReport",iomReport);
+			modelAndView.addObject("msg","");
+			modelAndView.setViewName("user/report");
+			return modelAndView;
+		}
+		
+		if (iomReport.getReqtype().equals("Get_Reference_No")) {
+			GetRefdetail getRefdetail=iomUtility.getref(iomReport.getReqdate(),user.getBranchname());
+			
+			if (!getRefdetail.getRefno().equals("0")) {
+				iomReport.setStatus("I");
+				ModelAndView modelAndView=new ModelAndView();
+				modelAndView.addObject("userName","Welcome "+user.getFullname());
+				modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+				modelAndView.addObject("iomReport",iomReport);
+				modelAndView.addObject("totalrecord",getRefdetail.getTotal());
+				modelAndView.addObject("requpdate",getRefdetail.getRequpdate());
+				modelAndView.addObject("coname",getRefdetail.getConame());
+				modelAndView.addObject("refno",getRefdetail.getRefno());
+				modelAndView.addObject("msg","");
+				modelAndView.setViewName("user/report");
+				return modelAndView;
+			} else {
+				iomReport.setStatus("N");
+				ModelAndView modelAndView=new ModelAndView();
+				modelAndView.addObject("userName","Welcome "+user.getFullname());
+				modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+				modelAndView.addObject("iomReport",iomReport);
+				modelAndView.addObject("msg",iomReport.getReqdate()+" Referance No Not Found or Courier Details Not Update");
+				modelAndView.setViewName("user/report");
+				return modelAndView;
+			}
+			
+			
+		} else if(iomReport.getReqtype().equals("Courier_Status")) {
+			CourierStatus courierStatus=iomUtility.courierStatus(iomReport.getRequeastno(),user.getBranchname());
+			
+			if (!courierStatus.getRefno().equals("0")) {
+				iomReport.setStatus("C");
+				ModelAndView modelAndView=new ModelAndView();
+				modelAndView.addObject("userName","Welcome "+user.getFullname());
+				modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+				modelAndView.addObject("iomReport",iomReport);
+				modelAndView.addObject("cototal",courierStatus.getTotalcou());
+				modelAndView.addObject("corefid",courierStatus.getRefno());
+				modelAndView.addObject("coconame",courierStatus.getConame());
+				modelAndView.addObject("cotrackid",courierStatus.getTrackid());
+				modelAndView.addObject("cocostatus",courierStatus.getCostatus());
+				modelAndView.addObject("coupdate",courierStatus.getUpdate());
+				modelAndView.addObject("msg","");
+				modelAndView.setViewName("user/report");
+				return modelAndView;
+				
+			} else {
+				iomReport.setStatus("N");
+				ModelAndView modelAndView=new ModelAndView();
+				modelAndView.addObject("userName","Welcome "+user.getFullname());
+				modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+				modelAndView.addObject("iomReport",iomReport);
+				modelAndView.addObject("msg","Referance No Not Found or Courier Details Not Update");
+				modelAndView.setViewName("user/report");
+				return modelAndView;
+			}
+		}
+		List<GenerateIOM> generateIOMs=iomUtility.iomGenearet(iomReport.getRequeastno());	
+					
+		return new ModelAndView("IOMPdf","generateIOMs", generateIOMs);
+	}
 	
 }
