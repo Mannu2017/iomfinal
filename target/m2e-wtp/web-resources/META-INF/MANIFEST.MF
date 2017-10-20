@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: iom
+Implementation-Version: 0.0.1
+Built-By: Mannu
+Implementation-Vendor-Id: kdms
+Build-Jdk: 1.8.0_144
+Implementation-URL: http://projects.spring.io/spring-boot/iom/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+

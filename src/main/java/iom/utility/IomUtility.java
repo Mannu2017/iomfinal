@@ -33,7 +33,7 @@ public class IomUtility {
 	{
 		try{
 		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		panconn=DriverManager.getConnection("jdbc:sqlserver://192.168.84.90;user=sa;password=Karvy@123;database=tinbos");
+		panconn=DriverManager.getConnection("jdbc:sqlserver://localhost;user=Anu;password=Karvy@123;database=tinbos");
 		}catch(Exception e)
 		{	
 			System.out.println("Error:"+e);
@@ -1426,35 +1426,31 @@ public class IomUtility {
 		return courierStatus;
 	}
 
-	public List<GenerateIOM> iomGenearet(String requeastno) {
-		List<GenerateIOM> generateIOMs= new ArrayList<GenerateIOM>();
-		GenerateIOM generateIOM=null;
+	public GenerateIOM iomGenearet(IomReport iomReport) {
+		GenerateIOM generateIOM=new GenerateIOM();
 		try {
-			PreparedStatement ps=panconn.prepareStatement("select Ack_No,Application_Name,Type,Status,Remarks from TinbosIOMRecord where Reference_No='"+requeastno+"' order by Type");
+			PreparedStatement ps=panconn.prepareStatement("select ReqDate,Ref_Id,Pan,Pran,Etds,Tan,Paper,Air,G24,TotalRecord,BranchCode from BranchIom where Ref_Id='"+iomReport.getRequeastno()+"'");
 			ResultSet rs=ps.executeQuery();
-			while (rs.next()) {
-				generateIOM=new GenerateIOM();
-				generateIOM.setAckno(rs.getString(1));
-				if(rs.getString(2)==null) {
-					generateIOM.setName("No Name");
-				}else {
-					generateIOM.setName(rs.getString(2));
-				}
-				generateIOM.setType(rs.getString(3));
-				generateIOM.setStatus(rs.getString(4));
-				if(rs.getString(5)==null) {
-					generateIOM.setRemarks(" ");
-				} else {
-					generateIOM.setRemarks(rs.getString(5));
-				}
-				generateIOMs.add(generateIOM);
+			if (rs.next()) {
+				generateIOM.setAckdate(rs.getString(1));
+				generateIOM.setRefno(rs.getString(2));
+				generateIOM.setPan(rs.getString(3));
+				generateIOM.setPran(rs.getString(4));
+				generateIOM.setEtds(rs.getString(5));
+				generateIOM.setTan(rs.getString(6));
+				generateIOM.setPaper(rs.getString(7));
+				generateIOM.setAir(rs.getString(8));
+				generateIOM.setG24(rs.getString(9));
+				generateIOM.setTotalrecord(rs.getString(10));
+				generateIOM.setBranchcode(rs.getString(11));
+			} else {
+				generateIOM.setRefno("0");
 			}
-			
+			ps.close();
+			rs.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		
-		return generateIOMs;
+		}	
+		return generateIOM;
 	}
-
 }

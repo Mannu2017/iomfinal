@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.view.ResourceBundleViewResolver;
-import org.thymeleaf.spring4.SpringTemplateEngine;
 
 @Configuration
 @EnableWebSecurity
@@ -62,13 +61,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.accessDeniedPage("/access-denied");
 	}
 	
-	@Bean  
-    public ResourceBundleViewResolver resourceBundleViewResolver() {  
-	    ResourceBundleViewResolver resolver = new ResourceBundleViewResolver();
-	    resolver.setBasename("views");
-	    resolver.setOrder(1);
-        return resolver;  
-    }
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {

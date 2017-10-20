@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8"></meta>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+	<title>Tinbos iom User</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	 <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}" /> 
+	 <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+	<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+	
+	$(function() { reportType(); });
+	
+	function reportType() {
+		var selectBox =document.getElementById("reporttype");
+		var selected = selectBox.options[selectBox.selectedIndex].value;
+		//alert(selected);
+		
+		if(selected=='Generate_IOM'){
+			
+			document.getElementById('ref').style.display = 'block';
+			document.getElementById('reffild').style.display = 'block';
+			document.getElementById('rdate').style.display = 'none';
+			document.getElementById('rdatefild').style.display = 'none';
+			
+		}else if(selected=='Courier_Status'){
+			
+			document.getElementById('ref').style.display = 'block';
+			document.getElementById('reffild').style.display = 'block';
+			document.getElementById('rdate').style.display = 'none';
+			document.getElementById('rdatefild').style.display = 'none';
+			
+		}else if(selected=='Get_Reference_No'){
+			
+			document.getElementById('ref').style.display = 'none';
+			document.getElementById('reffild').style.display = 'none';
+			document.getElementById('rdate').style.display = 'block';
+			document.getElementById('rdatefild').style.display = 'block';
+			
+		}
+	}
+	
+	function validatePage() {
+		
+		var selectBox =document.getElementById("reporttype");
+		var selected = selectBox.options[selectBox.selectedIndex].value;
+		var x=document.getElementById('rdatefild').value;
+		var y=document.getElementById('reffild').value;
+		if(selected=='Generate_IOM'){
+			if(y == null || y == ""){
+				alert("Please Enter Reference No");
+				return false;
+			}else {
+				if(confirm("Do you want to Generate IOM")){
+					$("#IomReport").attr('target', '_blank');
+					setTimeout(function(){ window.location.href = 'http://localhost:8090/user/home'; }, 500); 
+					
+					return true;
+				}else{
+					return false;
+				}
+			}
+		} else if(selected=='Courier_Status'){
+			if(y == null || y == ""){
+				alert("Please Enter Reference No");
+				return false;
+			}
+		} else if (selected=='Get_Reference_No'){
+			if(x == null || x == ""){
+				alert("Please Select Date");
+				return false;
+			}
+		}
+	}
+	
+	
+/*]]>*/
+</script>
+	
+</head>
+<body>
+	<header class="site-header">
+		<div class="top">
+         </div>
+         <nav class="navbar navbar-default">
+         	<div class="container">
+         		<a th:href="@{/user/home}" class="navbar-brand">
+					<img th:src="@{/img/karlogo.png}" alt="Post"></img>
+				</a>
+				
+				<ul class="nav navbar-nav main-navbar-nav">
+					<li ><a th:href="@{/user/home}" class="btn-block" role="button">Home</a></li>
+					<li ><a th:href="@{/user/submit}" class="btn-block" role="button">Courier Update</a></li>
+					<li class="active"><a th:href="@{/user/report}" class="btn-block" role="button">Report</a></li>
+				</ul>
+				
+				<div class="collapse navbar-collapse" id="bs-navbar-collapse">
+					<ul class="nav navbar-nav main-navbar-nav">	
+						<form th:action="@{/logout}" method="get"><span th:utext="${userName}"></span>  .<button class="btn btn-primary" name="logout" type="Submit" >Logout</button></form>						 
+					</ul>
+				</div>
+       	</div>
+     </nav>
+</header>
+
+	<body>
+	<br></br>
+	<br></br>
+		<div class="container font">
+			<div class="row loginpanelspace">
+				<div class="login-panel panel panel-primary ppanel">
+					<div class="panel-heading">
+                         <div class="row">
+                        <div class="col-sm-10">
+                        <h3 class="panel-title">User Interface</h3>
+                        </div>
+                        <div class="col-sm-2">
+                        <span th:utext="${branchname}"></span>
+                        </div>
+                       </div>                 
+                    </div>
+                    <!-- Get Report Panel Start -->
+                    	<form autocomplete="off" th:action="@{/user/report}" th:object="${iomReport}" method="post" class="form-horizontal" role="form" name="IomReport" id="IomReport">
+                    		<br></br>
+                    		<div class="form-group">
+                    		<div class="row">
+							<div class="col-sm-2"></div>
+							<div class="col-sm-8">
+			    			<div class="col-sm-2">
+								<strong>Request Type:</strong>
+							</div>		
+							<div class="col-sm-3">
+							<select class="form-control" th:field="*{reqtype}" id="reporttype" onChange="reportType()">
+                                <option th:value="Generate_IOM" th:text="Generate_IOM"></option>
+                                <option th:value="Courier_Status" th:text="Courier_Status"></option>
+                                <option th:value="Get_Reference_No" th:text="Get_Reference_No"></option>
+                			</select>	
+                			</div>
+                			<div class="col-sm-1">
+							<strong id="rdate">Date:</strong>
+							<strong id="ref">Reference No:</strong>
+							</div>	
+                			<div class="col-sm-3">
+                				<input id="rdatefild" th:field="*{reqdate}" class="form-control" type="date" />
+                				<input id="reffild" th:field="*{requeastno}" class="form-control" type="text" placeholder="Reference No" />
+                			</div>
+                			<button class="btn btn-primary" name="getData" type="Submit" onclick="return validatePage()">Submit</button>		
+							</div>
+							
+							<div th:if="${iomReport.status == 'I'}" class="form-group">
+							<div class="col-sm-3"></div>
+							<div class="col-sm-6">
+					             	 <div class="form-group">
+					             	 <br></br>
+					             	 <div class="row">
+					             	            
+										<div class="col-sm-1"></div>
+					             	 	<div class="row">
+										<strong class="form-control" align="center" style="height:58px">
+					             	 		<a>Total: </a>
+					             	 		<var style="color: RED" th:utext="${totalrecord}"></var>
+											<var  style="color: white">_</var>
+											<a>Reference No:</a>
+											<var style="color: RED" th:utext="${refno}"></var>
+											<var  style="color: white">_</var>
+											<a>Update Date:</a>
+											<var style="color: RED" th:utext="${requpdate}"></var>
+											<var  style="color: white">_</var>
+											<a>Courier:</a>
+											<var style="color: RED" th:utext="${coname}"></var>		
+					             	 	</strong>
+					             	 </div>
+					             </div>
+					             
+					         </div>                 
+					        </div>
+							</div>
+							
+							<div th:if="${iomReport.status == 'C'}" class="form-group">
+							<div class="col-sm-3"></div>
+							<div class="col-sm-6">
+					             	 <div class="form-group">
+					             	 <br></br>
+					             	 <div class="row">
+					             	           
+										<div class="col-sm-1"></div>
+					             	 	<div class="row">
+										<strong class="form-control" align="center" style="height:58px">
+					             	 		<a>Total: </a>
+					             	 		<var style="color: RED" th:utext="${cototal}"></var>
+											<var  style="color: white">_</var>
+											<a>Reference No:</a>
+											<var style="color: RED" th:utext="${corefid}"></var>
+											<var  style="color: white">_</var>
+											<a>Update Date:</a>
+											<var style="color: RED" th:utext="${coupdate}"></var>
+											<var  style="color: white">_</var>
+											<a>Courier:</a>
+											<var style="color: RED" th:utext="${coconame}"></var>
+											<var  style="color: white">_</var>
+											<a>Tracking Id:</a>
+											<var style="color: RED" th:utext="${cotrackid}"></var>
+											<var  style="color: white">_</var>
+											<a>Status:</a>
+											<var style="color: RED" th:utext="${cocostatus}"></var>		
+					             	 	</strong>
+					             	 </div>
+					             </div>
+					             
+					         </div>                 
+					        </div>
+							</div>
+							
+							
+							</div>
+							<br></br>
+                    		<div class="col-sm-4"></div>
+							<div class="col-sm-4" >
+                        			<span th:utext="${msg}" style="color: red"></span>
+                        	</div>
+                    		</div>
+                    	
+                    	
+                    	</form>
+               		<!-- Get Report Panel End --> 
+				</div>
+			</div>
+		</div>
+	</body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</body>
+</html>

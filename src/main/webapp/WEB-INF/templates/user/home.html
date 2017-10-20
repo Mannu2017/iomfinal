@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8"></meta>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+	<title>Tinbos iom User</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	 <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}" /> 
+	 <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+	<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+	
+	function validatePage() {
+		var confrm="Do you want Submit" ;
+		if(confirm("Do you want Submit"))
+		{
+			setTimeout(function(){ window.location.href = 'http://192.168.56.24:8090/user/home'; }, 50);	
+		}else{
+			return false;
+		}
+	}
+		
+	function validateForm(ackno) {
+		$(".modal-body #ackno").val(ackno);    
+	return true;
+	}
+	
+/*]]>*/
+</script>
+	
+</head>
+<body>
+	<header class="site-header">
+		<div class="top">
+         </div>
+         <nav class="navbar navbar-default">
+         	<div class="container">
+         		<a th:href="@{/user/home}" class="navbar-brand">
+					<img th:src="@{/img/karlogo.png}" alt="Post"></img>
+				</a>
+				
+				<ul class="nav navbar-nav main-navbar-nav">
+					<li class="active"><a th:href="@{/user/home}" class="btn-block" role="button">Home</a></li>
+					<li ><a th:href="@{/user/submit}" class="btn-block" role="button">Courier Update</a></li>
+					<li ><a th:href="@{/user/report}" class="btn-block" role="button">Report</a></li>
+				</ul>
+				
+				<div class="collapse navbar-collapse" id="bs-navbar-collapse">
+					<ul class="nav navbar-nav main-navbar-nav">	
+						<form th:action="@{/logout}" method="get"><span th:utext="${userName}"></span>  .<button class="btn btn-primary" name="logout" type="Submit" >Logout</button></form>						 
+					</ul>
+				</div>
+       	</div>
+     </nav>
+</header>
+
+	<body>
+	<br></br>
+	<br></br>
+		<div class="container font">
+			<div class="row loginpanelspace">
+				<div class="login-panel panel panel-primary ppanel">
+					<div class="panel-heading">
+                         <div class="row">
+                        <div class="col-sm-10">
+                        <h3 class="panel-title">User Interface</h3>
+                        </div>
+                        <div class="col-sm-2">
+                        <span th:utext="${branchname}"></span>
+                        </div>
+                       </div>                 
+                    </div>
+                    <!-- Get Report Panel Start -->
+                    <div class="panel-body">
+                    <form autocomplete="off" action="#" th:action="@{/user/home}" th:object="${requestData}" method="post" class="form-horizontal" role="form" id="GetData">
+                    <br></br>
+                    	<div class="form-group">
+                    		<div class="row">
+							<div class="col-sm-2"></div>
+							<div class="col-sm-9">
+			    			<div class="col-sm-2">
+								<strong>Application Type:</strong>
+							</div>		
+							<div class="col-sm-2">
+							<select class="form-control" th:field="*{type}"  id="type">
+                                <option th:value="Pan" th:text="Pan"></option>
+                                <option th:value="Pran" th:text="Pran"></option>
+                                <option th:value="Etds" th:text="Etds"></option>
+                                <option th:value="Tan" th:text="Tan"></option>
+                                <option th:value="Paper_Return" th:text="Paper_Return"></option>
+                                <option th:value="Air" th:text="Air"></option>
+                                <option th:value="24G" th:text="24G"></option>
+                                <option th:value="All" th:text="All"></option>
+                			</select>	
+                			</div>
+                			<div class="col-sm-1"></div>
+                 			<div class="col-sm-1">
+							<strong>Date:</strong>
+							</div>	
+                			<div class="col-sm-3">
+                				<input class="form-control" type="date" th:field="*{rdate}" placeholder="DD-MM-YYYY" />
+                				<label th:if="${#fields.hasErrors('rdate')}" th:errors="*{rdate}"
+								           class="validation-message" style="color: red"></label>
+                			</div>
+                				<button class="btn btn-primary" name="getData" type="Submit" >Search</button>
+                				<div th:if="${result}" class="form-group">
+                				<br></br>
+						    <div class="row">
+					        <div class="col-sm-12">
+					        <!-- Start Table Data -->
+					        
+					          <table class="table table-striped" id="RowData">
+                               <thead>
+                                <tr>
+                                <th>Sl No</th>
+                                <th>Ack No</th>
+                                <th>Name</th>
+                                <th>Ack Date</th>
+                                <th>Status</th>
+                               </tr>
+                              </thead>
+                               <tbody>
+							  <th:block th:each="panrecord : ${panrecords}">
+                                <tr>
+                                   <td th:text="${panrecord.slno}"></td>
+                                   <td id="ack" th:text="${panrecord.ackno}"></td>
+                                   <td th:text="${panrecord.name}"></td>
+                                   <td th:text="${panrecord.ackdate}"></td>
+                                   <td>
+                               		<a href="#updateStatus" data-toggle="modal" data-target="#login-modal" data-id="${panrecord.ackno}" th:text="${panrecord.status}" th:onclick="'validateForm(\''+${panrecord.ackno}+'\');'"></a>
+                               		</td>
+
+                                </tr>
+                               </th:block>
+                               </tbody>
+                               </table>
+                               
+                               <div class="modal fade" id="login-modal"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    	  					<div class="modal-dialog">
+							<div class="modal-body loginmodal-container">
+							<h1>Status Update</h1>
+							<strong>Acknowledgement No</strong>
+				  			<input  type="text" id="ackno" name="ackno" th:field="*{ackno}" placeholder="Ack No" class="form-control"  onfocus="self.blur" />
+							
+							<strong>Acknowledgement Status</strong>
+							<select class="form-control" th:field="*{ackstatus}"  id="type" >
+                                <option th:value="Dispatched" th:text="Dispatched"></option>
+                                <option th:value="Pending" th:text="Pending"></option>
+                                <option th:value="Reject" th:text="Reject"></option>
+                			</select>
+                			
+                			<strong>Remarks</strong>
+                			<input  type="text" id="ackremarks" name="ackremarks" th:field="*{ackremarks}" placeholder="Remarks" class="form-control" />
+							
+							<button class="btn btn-lg btn-primary btn-block" name="Submit" type="Submit">Submit</button>
+				  			
+							</div>
+							</div>
+		  					</div>
+                               
+                               <div class="col-sm-4"></div>
+							<div class="col-sm-4" >
+                        			<button class="btn btn-primary" name="UpdateRecord" type="Submit" style="width:200px" onclick="return validatePage()" >Submit</button>
+                        		</div>
+                        		
+                        		
+                        		<!-- End Table Data -->
+							<div class="col-sm-1"></div>
+                            </div>
+						    </div>
+                            </div>
+							</div>
+							<br></br>
+							<br></br>
+							<br></br>
+							<div class="col-sm-5"></div>
+							<div class="col-sm-1"></div>
+							<div class="col-sm-4" >
+                        			<span th:utext="${msg}" style="color: red"></span>
+                        			
+                        		</div>
+							</div>
+                    		</div>
+                    		</form>
+                    		</div>    
+               <!-- Get Report Panel End --> 
+				</div>
+			</div>
+		</div>
+	</body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</body>
+</html>

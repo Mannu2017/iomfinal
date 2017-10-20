@@ -74,9 +74,14 @@ public class IomController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user=userService.findByUsername(auth.getName());
 		modelAndView.addObject("userName", "Welcome " + user.getFullname());
+		modelAndView.addObject("branchname",user.getBranchname());
 		modelAndView.setViewName("admin/home");
 		return modelAndView;
 	}
+	
+	
+	
+	
 	
 	@RequestMapping(value="/user/home", method = RequestMethod.GET)
 	public ModelAndView userhome(){
@@ -85,7 +90,7 @@ public class IomController {
 		User user=userService.findByUsername(auth.getName());
 		RequestData requestData=new RequestData();
 		modelAndView.addObject("userName", "Welcome " + user.getFullname());
-		modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+		modelAndView.addObject("branchname",user.getBranchname());
 		modelAndView.addObject("requestData",requestData);
 		modelAndView.addObject("msg","");
 		modelAndView.setViewName("user/home");
@@ -102,7 +107,7 @@ public class IomController {
 			if (result.hasErrors()) {
 				ModelAndView modelAndView=new ModelAndView();
 				modelAndView.addObject("userName","Welcome "+user.getFullname());
-				modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+				modelAndView.addObject("branchname",user.getBranchname());
 				modelAndView.addObject("requestData",requestData);
 				modelAndView.addObject("msg","");
 				modelAndView.addObject("result", false);
@@ -125,7 +130,7 @@ public class IomController {
 			if (panRecords.size()==0) {
 				ModelAndView modelAndView=new ModelAndView();
 				modelAndView.addObject("userName","Welcome "+user.getFullname());
-				modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+				modelAndView.addObject("branchname",user.getBranchname());
 				modelAndView.addObject("requestData",requestData);
 				modelAndView.addObject("msg","No Record found");
 				modelAndView.addObject("result", false);
@@ -135,7 +140,7 @@ public class IomController {
 			
 			ModelAndView modelAndView=new ModelAndView();
 			modelAndView.addObject("userName", "Welcome " + user.getFullname());
-			modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+			modelAndView.addObject("branchname",user.getBranchname());
 			modelAndView.addObject("msg","");
 			modelAndView.addObject("result", true);
 			modelAndView.addObject("panrecords",panRecords);
@@ -145,7 +150,7 @@ public class IomController {
 		} catch (Exception e) {
 			ModelAndView modelAndView=new ModelAndView();
 			modelAndView.addObject("userName","Welcome "+user.getFullname());
-			modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+			modelAndView.addObject("branchname",user.getBranchname());
 			modelAndView.addObject("requestData",requestData);
 			modelAndView.addObject("msg","Data Error");
 			modelAndView.addObject("result", false);
@@ -162,7 +167,7 @@ public class IomController {
 		reportRequeast.setStatus("N");
 		User user=userService.findByUsername(auth.getName());
 		modelAndView.addObject("userName", "Welcome " + user.getFullname());
-		modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+		modelAndView.addObject("branchname",user.getBranchname());
 		modelAndView.addObject("reportRequeast",reportRequeast);
 		modelAndView.addObject("msg","");
 		modelAndView.setViewName("user/submit");
@@ -177,7 +182,7 @@ public class IomController {
 		if (result.hasErrors()) {
 			ModelAndView modelAndView=new ModelAndView();
 			modelAndView.addObject("userName","Welcome "+user.getFullname());
-			modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+			modelAndView.addObject("branchname",user.getBranchname());
 			modelAndView.addObject("reportRequeast",reportRequeast);
 			modelAndView.addObject("msg","");
 			modelAndView.setViewName("user/submit");
@@ -189,7 +194,7 @@ public class IomController {
 			if (reqDate.getTotal()==0) {
 				ModelAndView modelAndView=new ModelAndView();
 				modelAndView.addObject("userName","Welcome "+user.getFullname());
-				modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+				modelAndView.addObject("branchname",user.getBranchname());
 				modelAndView.addObject("reportRequeast",reportRequeast);
 				modelAndView.addObject("msg","Please Update Your Application Status  Click Home Option for Update");
 				modelAndView.setViewName("user/submit");
@@ -200,7 +205,7 @@ public class IomController {
 				ModelAndView modelAndView=new ModelAndView();
 				reportRequeast.setStatus("V");
 				modelAndView.addObject("userName","Welcome "+user.getFullname());
-				modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+				modelAndView.addObject("branchname",user.getBranchname());
 				modelAndView.addObject("reportRequeast",reportRequeast);
 				modelAndView.addObject("panCou",reqDate.getPan());
 				modelAndView.addObject("pranCou",reqDate.getPran());
@@ -220,7 +225,7 @@ public class IomController {
 			
 			ModelAndView modelAndView=new ModelAndView();
 			modelAndView.addObject("userName","Welcome "+user.getFullname());
-			modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+			modelAndView.addObject("branchname",user.getBranchname());
 			modelAndView.addObject("reportRequeast",reportRequeast);
 			modelAndView.addObject("msg","");
 			modelAndView.setViewName("user/submit");
@@ -235,7 +240,7 @@ public class IomController {
 		iomReport.setStatus("N");
 		User user=userService.findByUsername(auth.getName());
 		modelAndView.addObject("userName", "Welcome " + user.getFullname());
-		modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+		modelAndView.addObject("branchname",user.getBranchname());
 		modelAndView.addObject("iomReport",iomReport);
 		modelAndView.addObject("msg","");
 		modelAndView.setViewName("user/report");
@@ -250,7 +255,7 @@ public class IomController {
 		if (result.hasErrors()) {
 			ModelAndView modelAndView=new ModelAndView();
 			modelAndView.addObject("userName","Welcome "+user.getFullname());
-			modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+			modelAndView.addObject("branchname",user.getBranchname());
 			modelAndView.addObject("iomReport",iomReport);
 			modelAndView.addObject("msg","");
 			modelAndView.setViewName("user/report");
@@ -264,7 +269,7 @@ public class IomController {
 				iomReport.setStatus("I");
 				ModelAndView modelAndView=new ModelAndView();
 				modelAndView.addObject("userName","Welcome "+user.getFullname());
-				modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+				modelAndView.addObject("branchname",user.getBranchname());
 				modelAndView.addObject("iomReport",iomReport);
 				modelAndView.addObject("totalrecord",getRefdetail.getTotal());
 				modelAndView.addObject("requpdate",getRefdetail.getRequpdate());
@@ -277,7 +282,7 @@ public class IomController {
 				iomReport.setStatus("N");
 				ModelAndView modelAndView=new ModelAndView();
 				modelAndView.addObject("userName","Welcome "+user.getFullname());
-				modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+				modelAndView.addObject("branchname",user.getBranchname());
 				modelAndView.addObject("iomReport",iomReport);
 				modelAndView.addObject("msg",iomReport.getReqdate()+" Referance No Not Found or Courier Details Not Update");
 				modelAndView.setViewName("user/report");
@@ -292,7 +297,7 @@ public class IomController {
 				iomReport.setStatus("C");
 				ModelAndView modelAndView=new ModelAndView();
 				modelAndView.addObject("userName","Welcome "+user.getFullname());
-				modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+				modelAndView.addObject("branchname",user.getBranchname());
 				modelAndView.addObject("iomReport",iomReport);
 				modelAndView.addObject("cototal",courierStatus.getTotalcou());
 				modelAndView.addObject("corefid",courierStatus.getRefno());
@@ -308,18 +313,28 @@ public class IomController {
 				iomReport.setStatus("N");
 				ModelAndView modelAndView=new ModelAndView();
 				modelAndView.addObject("userName","Welcome "+user.getFullname());
-				modelAndView.addObject("branchname","Branch: "+user.getBranchname());
+				modelAndView.addObject("branchname",user.getBranchname());
+				modelAndView.addObject("iomReport",iomReport);
+				modelAndView.addObject("msg","Referance No Not Found or Courier Details Not Update");
+				modelAndView.setViewName("user/report");
+				return modelAndView;
+			}
+		} else if(iomReport.getReqtype().equals("Generate_IOM")) {
+			GenerateIOM generateIOM=iomUtility.iomGenearet(iomReport);
+			if(generateIOM.getRefno().equals("0")) {
+				iomReport.setStatus("N");
+				ModelAndView modelAndView=new ModelAndView();
+				modelAndView.addObject("userName","Welcome "+user.getFullname());
+				modelAndView.addObject("branchname",user.getBranchname());
 				modelAndView.addObject("iomReport",iomReport);
 				modelAndView.addObject("msg","Referance No Not Found or Courier Details Not Update");
 				modelAndView.setViewName("user/report");
 				return modelAndView;
 			}
 		}
-		List<GenerateIOM> generateIOMs=iomUtility.iomGenearet(iomReport.getRequeastno());	
-					
-		System.out.println("LL: "+generateIOMs.toString());
 		
-		return new ModelAndView("IOMPdf","generateIOMs", generateIOMs);
+		GenerateIOM generateIOM=iomUtility.iomGenearet(iomReport);	
+		return new ModelAndView("pdfView","generateIOM", generateIOM);
 	}
 	
 }
